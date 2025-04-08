@@ -1,36 +1,49 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Node modules
 node_modules/
 
-# Expo
+# Sistemas Expo/EAS
 .expo/
+.expo-shared/
 dist/
 web-build/
-expo-env.d.ts
+build/
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Android/iOS nativo (prebuild)
+android/
+ios/
 
-# Metro
-.metro-health-check*
+# Dependencias de CocoaPods
+ios/Pods/
+*.xcworkspace
+Podfile.lock
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Archivos generados por Metro
+*.log
+*.lock
+*.tmp
+*.swp
 
-# macOS
+# Configuración local
+.env
+.env.*
 .DS_Store
-*.pem
 
-# local env files
-.env*.local
+# Archivos de audio y modelos pesados
+assets/models/*.bin
+*.wav
+*.mp3
 
-# typescript
-*.tsbuildinfo
+# Archivos cache/temporales
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+expo-debug.log*
+
+# Ignorar outputs de EAS
+*.apk
+*.aab
+*.ipa
+
+# Ignorar carpetas de configuración de IDE
+.vscode/
+.idea/
