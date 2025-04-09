@@ -8,9 +8,9 @@ dist/
 web-build/
 build/
 
-# Android/iOS nativo (prebuild)
-android/
-ios/
+# Ignorar carpetas de build locales pero no el código nativo
+/android/app/build
+/ios/build
 
 # Dependencias de CocoaPods
 ios/Pods/
