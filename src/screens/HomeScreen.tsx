@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import * as whisperService from '../services/whisperService';
 import TranscriptionButton from '../components/TranscriptionButton';
+import { prepareTestAudio } from '../utils/fileUtils';
 
 export default function HomeScreen() {
   const [isModelReady, setIsModelReady] = useState(false);
@@ -11,8 +12,9 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const init = async () => {
-      const success = await whisperService.prepareModel();
-      setIsModelReady(success);
+        await prepareTestAudio();
+        const success = await whisperService.prepareModel();
+        setIsModelReady(success);
     };
     init();
   }, []);
