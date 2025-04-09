@@ -1,37 +1,30 @@
 // src/components/TranscriptionButton.tsx
 import React from 'react';
-import { Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
 
 type Props = {
   onPress: () => void;
-  disabled?: boolean;
-  loading?: boolean;
 };
 
-export default function TranscriptionButton({ onPress, disabled = false, loading = false }: Props) {
+const TranscriptionButton: React.FC<Props> = ({ onPress }) => {
   return (
-    <Pressable style={[styles.button, disabled && styles.buttonDisabled]} onPress={onPress} disabled={disabled}>
-      {loading ? (
-        <ActivityIndicator color="#fff" />
-      ) : (
-        <Text style={styles.buttonText}>Iniciar transcripción</Text>
-      )}
+    <Pressable onPress={onPress} style={styles.button}>
+      <Text style={styles.text}>Iniciar transcripción</Text>
     </Pressable>
   );
-}
+};
+
+export default TranscriptionButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    backgroundColor: '#007bff',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: '#fff',
+  text: {
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },

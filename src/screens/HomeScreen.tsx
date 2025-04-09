@@ -1,85 +1,73 @@
 // src/screens/HomeScreen.tsx
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import * as whisperService from '../services/whisperService';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { prepareWhisper, transcribeTestAudio } from '../services/whisperService';
 import TranscriptionButton from '../components/TranscriptionButton';
-import { prepareTestAudio } from '../utils/fileUtils';
 
-export default function HomeScreen() {
-  const [isModelReady, setIsModelReady] = useState(false);
+const HomeScreen = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [transcription, setTranscription] = useState<string | null>(null);
-  const [isTranscribing, setIsTranscribing] = useState(false);
 
   useEffect(() => {
     const init = async () => {
-        await prepareTestAudio();
-        const success = await whisperService.prepareModel();
-        setIsModelReady(success);
+      try {
+        await prepareWhisper();
+      } catch (error) {
+        Alert.alert('Error al inicializar Whisper', String(error));
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     init();
   }, []);
 
-  const handleTranscription = useCallback(async () => {
-    setIsTranscribing(true);
+  const handleTranscription = async () => {
     try {
-      const result = await whisperService.transcribeTestAudio();
+      setIsLoading(true);
+      const result = await transcribeTestAudio();
       setTranscription(result);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo transcribir el archivo de audio.');
+      Alert.alert('Error al transcribir audio', String(error));
     } finally {
-      setIsTranscribing(false);
+      setIsLoading(false);
     }
-  }, []);
-
-  if (!isModelReady) {
-    return (
-      <View style={styles.centeredContainer}>
-        <ActivityIndicator size="large" />
-        <Text style={styles.infoText}>Cargando modelo de transcripción...</Text>
-      </View>
-    );
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <TranscriptionButton onPress={handleTranscription} disabled={isTranscribing} loading={isTranscribing} />
-      {transcription && (
-        <View style={styles.transcriptionBox}>
-          <Text style={styles.transcriptionText}>{transcription}</Text>
-        </View>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <>
+          <TranscriptionButton onPress={handleTranscription} />
+          {transcription && (
+            <View style={styles.resultContainer}>
+              <Text style={styles.resultText}>{transcription}</Text>
+            </View>
+          )}
+        </>
       )}
     </View>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
   },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  infoText: {
-    marginTop: 12,
-    fontSize: 16,
-    color: '#555',
-  },
-  transcriptionBox: {
-    marginTop: 24,
+  resultContainer: {
+    marginTop: 20,
     padding: 16,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 8,
-    width: '100%',
+    backgroundColor: '#eee',
+    borderRadius: 12,
   },
-  transcriptionText: {
-    fontSize: 15,
-    color: '#333',
+  resultText: {
+    fontSize: 16,
+    fontStyle: 'italic',
   },
 });
