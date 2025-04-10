@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Button, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { startRecording, stopRecording } from '../services/audioRecorder';
 import { getWhisperContext } from '../services/whisperService';
+import { log } from '../utils/logger';
 
 type Props = {
   onTranscription: (text: string) => void;
@@ -22,8 +23,9 @@ export default function RecordAndTranscribeButton({ onTranscription }: Props) {
         const { stop, promise } = await whisper.transcribe(filePath, {
           language: 'es',
         });
-        const result = await promise;
-        onTranscription(result.text);
+        const {result} = await promise;
+        onTranscription(result);
+        log('📝 Resultado:', result);
       } catch (error: any) {
         console.error('❌ Error al transcribir grabación:', error.message || error);
         onTranscription('[ERROR]');
