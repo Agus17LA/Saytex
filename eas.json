@@ -6,7 +6,16 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug",
+        "env": {
+          "EXPO_ANDROID_COMPILE_SDK_VERSION": "33",
+          "EXPO_ANDROID_TARGET_SDK_VERSION": "33",
+          "EXPO_ANDROID_BUILD_TOOLS_VERSION": "33.0.0"
+        }
+      }
     },
     "preview": {
       "distribution": "internal"
