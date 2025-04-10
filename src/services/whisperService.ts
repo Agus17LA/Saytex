@@ -1,17 +1,9 @@
-import { initWhisper, transcribe } from 'whisper.rn';
+import { initWhisper } from 'whisper.rn';
 import * as FileSystem from 'expo-file-system';
 import { log } from '../utils/logger';
+import { AUDIO_DEST_PATH, MODEL_DEST_PATH, GGML_URL, AUDIO_URL  } from '../constants/paths';
 
-const GGML_URL =
-  'https://github.com/Agus17LA/saytex-models/releases/download/Model/ggml-base.bin';
-
-const AUDIO_URL =
-  'https://github.com/Agus17LA/saytex-models/releases/download/model/AudioTest.wav';
-
-export const MODEL_DEST_PATH = FileSystem.documentDirectory + 'ggml-base.bin';
-export const AUDIO_DEST_PATH = FileSystem.documentDirectory + 'AudioTest.wav';
-
-let whisper: any; // instancia de WhisperContext
+let whisper: any;
 
 /**
  * Descarga un archivo si no existe
@@ -65,5 +57,10 @@ export async function transcribeTestAudio(): Promise<string> {
   const { stop, promise } = await whisper.transcribe(AUDIO_DEST_PATH, options);
   const { result } = await promise;
   log('📝 Resultado:', result);
-  return result.text;
+  return result;
+}
+
+export function getWhisperContext() {
+  if (!whisper) throw new Error('Whisper no inicializado');
+  return whisper;
 }
