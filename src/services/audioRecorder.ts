@@ -2,7 +2,7 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import { log } from '../utils/logger';
 import { RECORDING_PATH } from '../constants/paths';
-import { RNFFmpeg } from 'react-native-ffmpeg';
+import { FFmpegKit } from 'ffmpeg-kit-react-native';
 
 let recording: Audio.Recording | null = null;
 
@@ -43,11 +43,12 @@ export async function stopRecording(): Promise<string> {
   const wavPath = RECORDING_PATH;
 
   log('🎛️ Convirtiendo a .wav mono 16kHz...');
-  const command = `-y -i ${m4aPath} -ac 1 -ar 16000 -sample_fmt s16 ${wavPath}`;
-  const rc = await RNFFmpeg.execute(command);
+  const command = `-y -i "${m4aPath}" -ac 1 -ar 16000 -sample_fmt s16 "${wavPath}"`;
+  const session = await FFmpegKit.execute(command);
+  const returnCode = await session.getReturnCode();
 
-  if (rc !== 0) {
-    throw new Error(`❌ Error en la conversión de audio (código ${rc})`);
+  if (!returnCode.isValueSuccess()) {
+    throw new Error(`❌ Error en la conversión de audio (código ${returnCode})`);
   }
 
   log(`✅ Conversión finalizada: ${wavPath}`);
