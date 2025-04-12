@@ -43,7 +43,7 @@ export async function stopRecording(): Promise<string> {
   const wavPath = RECORDING_PATH;
 
   log('🎛️ Convirtiendo a .wav mono 16kHz...');
-  const command = `-y -i "${m4aPath}" -ac 1 -ar 16000 -sample_fmt s16 "${wavPath}"`;
+  const command = `-y -i ${m4aPath} -ac 1 -ar 16000 ${wavPath}`;
   const session = await FFmpegKit.execute(command);
   const returnCode = await session.getReturnCode();
 

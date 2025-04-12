@@ -13,4 +13,4 @@ export const GGML_URL =
 export const AUDIO_URL =
   'https://github.com/Agus17LA/saytex-models/releases/download/model/AudioTest.wav';
 
-export const RECORDING_PATH = FileSystem.documentDirectory + 'recorded.mp4';
+export const RECORDING_PATH = FileSystem.documentDirectory + 'recorded.wav';
